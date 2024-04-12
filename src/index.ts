@@ -1,5 +1,6 @@
 import xior, { XiorResponse as AxiosResponse } from "xior"
 import { curry, clamp, isNil } from "ramda"
+// @ts-ignore
 import pkg from "../package.json"
 
 const axios = xior.create();
@@ -299,6 +300,8 @@ class Endpoint {
   }
 }
 
+import { RunPodApi } from "./api/api"
+
 const defaultSdkOptions = {
   baseUrl: runpodServerlessBaseUrlProd,
 }
@@ -321,6 +324,9 @@ class RunpodSdk {
     return new Endpoint(this.baseUrl, this.apiKey, endpointId)
   }
   //pod...
+  pod() {
+    return new RunPodApi(this.apiKey)
+  }
   //template...
 }
 export default (apiKey: string, options: SdkOptions = defaultSdkOptions) =>
