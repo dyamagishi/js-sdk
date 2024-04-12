@@ -444,25 +444,38 @@ function _ts_generator(thisArg, body) {
         };
     }
 }
-import xior2 from "xior";
+import axios2 from "axios";
 import { curry, clamp, isNil } from "ramda";
 // package.json
 var package_default = {
     name: "runpod-sdk",
     version: "1.0.7",
     description: "JavaScript SDK for Runpod",
-    main: "dist/index.js",
+    exports: {
+        ".": {
+            import: {
+                types: "./dist/index.d.ts",
+                default: "./dist/index.js"
+            },
+            require: {
+                types: "./dist/index.d.cts",
+                default: "./dist/index.cjs"
+            },
+            default: "./dist/index.cjs"
+        }
+    },
+    main: "dist/index.cjs",
     types: "dist/index.d.ts",
-    module: "dist/index.mjs",
+    module: "dist/index.js",
     type: "module",
     author: "Runpod",
     dependencies: {
         "@actions/core": "^1.10.0",
         "@actions/github": "^5.1.1",
+        axios: "^1.6.8",
         dotenv: "^16.3.1",
         graphql: "^16.8.1",
-        ramda: "^0.29.0",
-        xior: "^0.1.4"
+        ramda: "^0.29.0"
     },
     devDependencies: {
         "@swc/core": "^1.4.13",
@@ -567,8 +580,7 @@ function generatePodResumeMutation(podId, gpuCount) {
     return '\n    mutation {\n      podResume(input: { podId: "'.concat(podId, '", gpuCount: ').concat(gpuCount, " }) {\n        id\n        desiredStatus\n        imageName\n        env\n        machineId\n        machine {\n          podHostId\n        }\n      }\n    }\n  ");
 }
 // src/api/api.ts
-import xior from "xior";
-var axios = xior.create();
+import axios from "axios";
 var HTTP_STATUS_UNAUTHORIZED = 401;
 var AuthenticationError = /*#__PURE__*/ function(Error1) {
     "use strict";
@@ -947,7 +959,6 @@ var RunPodApi = /*#__PURE__*/ function() {
     return RunPodApi;
 }();
 // src/index.ts
-var axios2 = xior2.create();
 function getUserAgent() {
     var sdkVersion = package_default.version;
     var environmentInfo = "Unknown Environment";

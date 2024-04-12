@@ -534,25 +534,38 @@ __export(src_exports, {
     }
 });
 module.exports = __toCommonJS(src_exports);
-var import_xior2 = __toESM(require("xior"), 1);
+var import_axios2 = __toESM(require("axios"), 1);
 var import_ramda = require("ramda");
 // package.json
 var package_default = {
     name: "runpod-sdk",
     version: "1.0.7",
     description: "JavaScript SDK for Runpod",
-    main: "dist/index.js",
+    exports: {
+        ".": {
+            import: {
+                types: "./dist/index.d.ts",
+                default: "./dist/index.js"
+            },
+            require: {
+                types: "./dist/index.d.cts",
+                default: "./dist/index.cjs"
+            },
+            default: "./dist/index.cjs"
+        }
+    },
+    main: "dist/index.cjs",
     types: "dist/index.d.ts",
-    module: "dist/index.mjs",
+    module: "dist/index.js",
     type: "module",
     author: "Runpod",
     dependencies: {
         "@actions/core": "^1.10.0",
         "@actions/github": "^5.1.1",
+        axios: "^1.6.8",
         dotenv: "^16.3.1",
         graphql: "^16.8.1",
-        ramda: "^0.29.0",
-        xior: "^0.1.4"
+        ramda: "^0.29.0"
     },
     devDependencies: {
         "@swc/core": "^1.4.13",
@@ -657,8 +670,7 @@ function generatePodResumeMutation(podId, gpuCount) {
     return '\n    mutation {\n      podResume(input: { podId: "'.concat(podId, '", gpuCount: ').concat(gpuCount, " }) {\n        id\n        desiredStatus\n        imageName\n        env\n        machineId\n        machine {\n          podHostId\n        }\n      }\n    }\n  ");
 }
 // src/api/api.ts
-var import_xior = __toESM(require("xior"), 1);
-var axios = import_xior.default.create();
+var import_axios = __toESM(require("axios"), 1);
 var HTTP_STATUS_UNAUTHORIZED = 401;
 var AuthenticationError = /*#__PURE__*/ function(Error1) {
     _inherits(AuthenticationError, Error1);
@@ -707,7 +719,7 @@ var RunPodApi = /*#__PURE__*/ function() {
                         };
                         return [
                             2,
-                            axios.post(url, data, {
+                            import_axios.default.post(url, data, {
                                 headers: headers,
                                 timeout: 3e4
                             }).then(function(response) {
@@ -1034,7 +1046,6 @@ var RunPodApi = /*#__PURE__*/ function() {
     return RunPodApi;
 }();
 // src/index.ts
-var axios2 = import_xior2.default.create();
 function getUserAgent() {
     var sdkVersion = package_default.version;
     var environmentInfo = "Unknown Environment";
@@ -1206,20 +1217,20 @@ var statusSync = (0, import_ramda.curry)(function(baseUrl, apiKey, endpointId, r
     var wait = (0, import_ramda.clamp)(1e3, 9e4, timeout);
     var url = getEndpointUrl(baseUrl, endpointId) + "/status-sync/" + requestId + "?wait=".concat(wait);
     var authHeader = getAuthHeader(apiKey);
-    return handleErrorsStatus(axios2.get(url, _object_spread({}, authHeader)));
+    return handleErrorsStatus(import_axios2.default.get(url, _object_spread({}, authHeader)));
 });
 var runsync = (0, import_ramda.curry)(function(baseUrl, apiKey, endpointId, request) {
     var timeout = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : 9e4;
     var wait = (0, import_ramda.clamp)(1e3, 9e4, timeout);
     var url = getEndpointUrl(baseUrl, endpointId) + "/runsync?wait=".concat(wait);
     var authHeader = getAuthHeader(apiKey);
-    return handleErrorsStatus(axios2.post(url, request, _object_spread({}, authHeader)));
+    return handleErrorsStatus(import_axios2.default.post(url, request, _object_spread({}, authHeader)));
 });
 var run = (0, import_ramda.curry)(function(baseUrl, apiKey, endpointId, request) {
     var timeout = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : 3e3;
     var url = getEndpointUrl(baseUrl, endpointId) + "/run";
     var authHeader = getAuthHeader(apiKey);
-    return handleErrors(axios2.post(url, request, _object_spread_props(_object_spread({}, authHeader), {
+    return handleErrors(import_axios2.default.post(url, request, _object_spread_props(_object_spread({}, authHeader), {
         timeout: timeout
     })));
 });
@@ -1227,7 +1238,7 @@ var status = (0, import_ramda.curry)(function(baseUrl, apiKey, endpointId, reque
     var timeout = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : 3e3;
     var url = getEndpointUrl(baseUrl, endpointId) + "/status/" + requestId;
     var authHeader = getAuthHeader(apiKey);
-    return handleErrorsStatus(axios2.get(url, _object_spread_props(_object_spread({}, authHeader), {
+    return handleErrorsStatus(import_axios2.default.get(url, _object_spread_props(_object_spread({}, authHeader), {
         timeout: timeout
     })));
 });
@@ -1254,7 +1265,7 @@ function _stream() {
                     authHeader = getAuthHeader(apiKey);
                     return [
                         4,
-                        _await_async_generator(handleErrors(axios2.get(url, authHeader)))
+                        _await_async_generator(handleErrors(import_axios2.default.get(url, authHeader)))
                     ];
                 case 2:
                     resp = _state.sent();
@@ -1339,7 +1350,7 @@ var cancel = (0, import_ramda.curry)(function(baseUrl, apiKey, endpointId, reque
     var timeout = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : 3e3;
     var url = getEndpointUrl(baseUrl, endpointId) + "/cancel/" + requestId;
     var authHeader = getAuthHeader(apiKey);
-    return handleErrors(axios2.post(url, {}, _object_spread_props(_object_spread({}, authHeader), {
+    return handleErrors(import_axios2.default.post(url, {}, _object_spread_props(_object_spread({}, authHeader), {
         timeout: timeout
     })));
 });
@@ -1347,7 +1358,7 @@ var health = (0, import_ramda.curry)(function(baseUrl, apiKey, endpointId) {
     var timeout = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : 3e3;
     var url = getEndpointUrl(baseUrl, endpointId) + "/health";
     var authHeader = getAuthHeader(apiKey);
-    return handleErrors(axios2.get(url, _object_spread_props(_object_spread({}, authHeader), {
+    return handleErrors(import_axios2.default.get(url, _object_spread_props(_object_spread({}, authHeader), {
         timeout: timeout
     })));
 });
@@ -1355,7 +1366,7 @@ var purgeQueue = (0, import_ramda.curry)(function(baseUrl, apiKey, endpointId) {
     var timeout = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : 3e3;
     var url = getEndpointUrl(baseUrl, endpointId) + "/purge-queue";
     var authHeader = getAuthHeader(apiKey);
-    return handleErrors(axios2.post(url, {}, _object_spread_props(_object_spread({}, authHeader), {
+    return handleErrors(import_axios2.default.post(url, {}, _object_spread_props(_object_spread({}, authHeader), {
         timeout: timeout
     })));
 });

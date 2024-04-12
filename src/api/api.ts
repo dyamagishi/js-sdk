@@ -8,9 +8,8 @@ interface Env {
     [key: string]: string;
 }
 
-import xior, { XiorResponse as AxiosResponse, XiorError as AxiosError } from "xior"
+import axios, { AxiosError } from "axios";
 
-const axios = xior.create();
 const HTTP_STATUS_UNAUTHORIZED = 401;
 
 interface GraphQLResponse {
@@ -73,7 +72,7 @@ export class RunPodApi {
     };
   
     const data = { query };
-  
+
     return axios.post(url, data, { headers, timeout: 30000 })
       .then(response => {
         return response.data;

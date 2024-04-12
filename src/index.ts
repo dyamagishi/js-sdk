@@ -1,9 +1,7 @@
-import xior, { XiorResponse as AxiosResponse } from "xior"
+import axios, { AxiosResponse } from "axios"
 import { curry, clamp, isNil } from "ramda"
 // @ts-ignore
 import pkg from "../package.json"
-
-const axios = xior.create();
 
 export type ExecutionPolicy = {
   ttl?: number
